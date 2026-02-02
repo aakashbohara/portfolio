@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Resume - {{ profile.full_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">My <span class="gradient-text">Resume</span></h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span><span>Resume</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container" style="max-width: 900px;">
+        <!-- Header -->
+        <div class="glass" style="padding: 40px; margin-bottom: 2rem; text-align: center;">
+            <h2 style="margin-bottom: 0.5rem;">{{ profile.full_name }}</h2>
+            <p style="color: var(--accent); font-size: 1.25rem; margin-bottom: 1rem;">{{ profile.title }}</p>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; color: var(--gray-400);">
+                <span><i class="fas fa-envelope"></i> {{ profile.email }}</span>
+                {% if profile.phone %}<span><i class="fas fa-phone"></i> {{ profile.phone }}</span>{% endif %}
+                {% if profile.location %}<span><i class="fas fa-map-marker-alt"></i> {{ profile.location }}</span>{% endif %}
+            </div>
+            {% if profile.resume %}
+            <a href="{{ profile.resume.url }}" class="btn btn-primary" style="margin-top: 1.5rem;" target="_blank">
+                <i class="fas fa-download"></i> Download PDF
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Experience -->
+        {% if experiences %}
+        <div class="glass" style="padding: 40px; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-briefcase" style="color: var(--accent);"></i> Work Experience
+            </h3>
+            {% for exp in experiences %}
+            <div style="{% if not forloop.last %}margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--glass-border);{% endif %}">
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem;">
+                    <h4 style="margin: 0;">{{ exp.job_title }}</h4>
+                    <span style="color: var(--accent);">{{ exp.start_date|date:"M Y" }} - {% if exp.is_current %}Present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}</span>
+                </div>
+                <p style="color: var(--primary); margin-bottom: 1rem;">{{ exp.company }}{% if exp.location %} • {{ exp.location }}{% endif %}</p>
+                <div style="color: var(--gray-400);">{{ exp.description|safe }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Education -->
+        {% if educations %}
+        <div class="glass" style="padding: 40px; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-graduation-cap" style="color: var(--accent);"></i> Education
+            </h3>
+            {% for edu in educations %}
+            <div style="{% if not forloop.last %}margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--glass-border);{% endif %}">
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem;">
+                    <h4 style="margin: 0;">{{ edu.degree }}</h4>
+                    <span style="color: var(--accent);">{{ edu.start_date|date:"Y" }} - {% if edu.is_current %}Present{% else %}{{ edu.end_date|date:"Y" }}{% endif %}</span>
+                </div>
+                <p style="color: var(--primary); margin-bottom: 0.5rem;">{{ edu.institution }}</p>
+                {% if edu.field_of_study %}<p style="color: var(--gray-400); margin: 0;">{{ edu.field_of_study }}</p>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Skills -->
+        {% if skill_categories %}
+        <div class="glass" style="padding: 40px; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-code" style="color: var(--accent);"></i> Skills
+            </h3>
+            {% for category in skill_categories %}
+            <div style="{% if not forloop.last %}margin-bottom: 1.5rem;{% endif %}">
+                <h5 style="color: var(--gray-300); margin-bottom: 0.75rem;">{{ category.name }}</h5>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% for skill in category.skills.all %}
+                    {% if skill.is_active %}
+                    <span style="padding: 6px 16px; background: var(--gray-800); border-radius: 20px; font-size: 0.9rem;">{{ skill.name }}</span>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Certifications -->
+        {% if certifications %}
+        <div class="glass" style="padding: 40px;">
+            <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-certificate" style="color: var(--accent);"></i> Certifications
+            </h3>
+            {% for cert in certifications %}
+            <div style="{% if not forloop.last %}margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--glass-border);{% endif %}">
+                <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h5 style="margin: 0 0 0.25rem;">{{ cert.name }}</h5>
+                        <p style="color: var(--gray-400); margin: 0;">{{ cert.issuing_organization }}</p>
+                    </div>
+                    <span style="color: var(--accent);">{{ cert.issue_date|date:"M Y" }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Services - {{ profile.full_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">My <span class="gradient-text">Services</span></h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span><span>Services</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-description">I offer comprehensive digital solutions to help bring your ideas to life.</p>
+        </div>
+
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card">
+                <div class="service-icon">
+                    {% if service.icon %}{{ service.icon.as_html }}{% else %}<i class="fas fa-laptop-code"></i>{% endif %}
+                </div>
+                <h4 class="service-title">{{ service.title }}</h4>
+                <p class="service-description">{{ service.short_description }}</p>
+                {% if service.price_starting %}
+                <div class="service-price">From {{ service.price_starting }}</div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p style="text-align: center; grid-column: 1 / -1;">No services available.</p>
+            {% endfor %}
+        </div>
+
+        <!-- CTA -->
+        <div class="glass" style="padding: 50px; text-align: center; margin-top: 4rem; border-radius: 20px;">
+            <h3 style="margin-bottom: 1rem;">Ready to Start Your Project?</h3>
+            <p style="color: var(--gray-400); max-width: 500px; margin: 0 auto 2rem;">Let's discuss how I can help bring your ideas to life.</p>
+            <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-paper-plane"></i> Get in Touch
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

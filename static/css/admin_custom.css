@@ -1,0 +1,46 @@
+/* Custom Admin Styles for Icon Picker */
+
+/* Target the specific container for FontAwesome 6 dropdown results */
+.select2-container--default .select2-results__options {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)) !important;
+    gap: 10px !important;
+    padding: 15px !important;
+}
+
+/* Style individual options */
+.select2-container--default .select2-results__option {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    background-color: #f8fafc !important;
+    height: 40px !important;
+    width: 40px !important;
+    margin: 0 auto !important;
+}
+
+/* Hover state */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #3b82f6 !important;
+    color: white !important;
+}
+
+/* Hide the text label - assumes standard rendering where text follows icon */
+/* This might be tricky as Select2 often puts text directly in the div. 
+   We'll try to hide text by setting font-size to 0 but keeping icon visible. */
+.select2-container--default .select2-results__option {
+    font-size: 0 !important; /* Hide text */
+}
+
+/* Ensure icon stays visible and sized correctly */
+.select2-container--default .select2-results__option .fa, 
+.select2-container--default .select2-results__option .fas, 
+.select2-container--default .select2-results__option .fab,
+.select2-container--default .select2-results__option .far {
+    font-size: 18px !important; /* Restore icon size */
+    width: 100% !important;
+    text-align: center !important;
+}

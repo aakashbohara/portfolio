@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Projects - {{ profile.full_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">My <span class="gradient-text">Projects</span></h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span><span>Projects</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if categories %}
+        <div class="projects-filter">
+            <a href="{% url 'projects' %}" class="filter-btn {% if not current_category %}active{% endif %}">All</a>
+            {% for category in categories %}
+            <a href="{% url 'projects' %}?category={{ category.slug }}" class="filter-btn {% if current_category == category.slug %}active{% endif %}">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="projects-grid">
+            {% for project in projects %}
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" loading="lazy">
+                    <div class="project-overlay">
+                        <div class="project-links">
+                            <a href="{{ project.get_absolute_url }}"><i class="fas fa-eye"></i></a>
+                            {% if project.project_url %}<a href="{{ project.project_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>{% endif %}
+                            {% if project.github_url %}<a href="{{ project.github_url }}" target="_blank"><i class="fab fa-github"></i></a>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="project-content">
+                    {% if project.category %}
+                    <div class="project-category">{{ project.category.name }}</div>
+                    {% endif %}
+                    <h4 class="project-title">
+                        <a href="{{ project.get_absolute_url }}">{{ project.title }}</a>
+                    </h4>
+                    <p class="project-description">{{ project.short_description }}</p>
+                    <div class="project-tech">
+                        {% for tech in project.get_technologies_list|slice:":4" %}
+                        <span>{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p style="text-align: center; grid-column: 1 / -1;">No projects found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

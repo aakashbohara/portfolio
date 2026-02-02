@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ profile.full_name }} - {{ profile.title }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ profile.meta_description|default:profile.bio_short }}{% endblock %}">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Dynamic Theme Colors -->
+    <style>
+        :root {
+            {% if profile.theme_mode == 'gradient' %}
+            --primary-start: {{ profile.get_primary_gradient.0 }};
+            --primary-end: {{ profile.get_primary_gradient.1 }};
+            --primary: {{ profile.get_primary_gradient.0 }};
+            {% else %}
+            --primary-start: {{ profile.get_primary_color }};
+            --primary-end: {{ profile.get_primary_color }};
+            --primary: {{ profile.get_primary_color }};
+            {% endif %}
+            --accent: {{ profile.accent_color|default:'#00f2fe' }};
+            --dark: {{ profile.bg_dark|default:'#0f172a' }};
+            --dark-light: {{ profile.bg_card|default:'#1e293b' }};
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+    
+    {% if profile.google_analytics_id %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ profile.google_analytics_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ profile.google_analytics_id }}');
+    </script>
+    {% endif %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="{% url 'home' %}" class="navbar-brand">
+                    {% if profile.logo %}
+                    <img src="{{ profile.logo.url }}" alt="{{ profile.full_name }}" style="height: 40px; width: auto; border-radius: 0;">
+                    {% else %}
+                    {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}">
+                    {% endif %}
+                    <span class="gradient-text">{{ profile.first_name }}</span>
+                    {% endif %}
+                </a>
+
+                <div class="navbar-menu">
+                    <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+                    <a href="{% url 'about' %}" class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
+                    <a href="{% url 'projects' %}" class="nav-link {% if 'project' in request.resolver_match.url_name %}active{% endif %}">Projects</a>
+                    <a href="{% url 'services' %}" class="nav-link {% if 'service' in request.resolver_match.url_name %}active{% endif %}">Services</a>
+                    <a href="{% url 'blog' %}" class="nav-link {% if 'blog' in request.resolver_match.url_name %}active{% endif %}">Blog</a>
+                    <a href="{% url 'contact' %}" class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+                </div>
+
+                <div class="navbar-cta">
+                    <a href="{% url 'contact' %}" class="btn btn-primary">Hire Me</a>
+                </div>
+
+                <button class="mobile-menu-btn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container" style="margin-top: 100px;">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <div class="footer-brand-name gradient-text">{{ profile.full_name|default:"Portfolio" }}</div>
+                    </div>
+                    <p class="footer-brand-text">{{ profile.bio_short|default:"Building digital experiences with passion and code."|truncatewords:30 }}</p>
+                    <div class="footer-social">
+                        {% if profile.github %}<a href="{{ profile.github }}" target="_blank"><i class="fab fa-github"></i></a>{% endif %}
+                        {% if profile.linkedin %}<a href="{{ profile.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                        {% if profile.twitter %}<a href="{{ profile.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                        {% if profile.instagram %}<a href="{{ profile.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                        {% if profile.dribbble %}<a href="{{ profile.dribbble }}" target="_blank"><i class="fab fa-dribbble"></i></a>{% endif %}
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'about' %}">About Me</a></li>
+                        <li><a href="{% url 'projects' %}">Projects</a></li>
+                        <li><a href="{% url 'services' %}">Services</a></li>
+                        <li><a href="{% url 'blog' %}">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Services</h4>
+                    <ul class="footer-links">
+                        {% for service in footer_services %}
+                        <li><a href="{{ service.get_absolute_url }}">{{ service.title }}</a></li>
+                        {% empty %}
+                        <li><a href="{% url 'services' %}">View All Services</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4 class="footer-title">Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:{{ profile.email|default:'contact@example.com' }}">{{ profile.email|default:'contact@example.com' }}</a></li>
+                        {% if profile.phone %}<li><a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></li>{% endif %}
+                        {% if profile.location %}<li>{{ profile.location }}</li>{% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; {% now "Y" %} {{ profile.full_name }}. All rights reserved.</p>
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <a href="{% url 'resume' %}" style="color: var(--gray-400);">Resume</a>
+                    <!-- ⚠️ IMPORTANT: Please do not remove this credit -->
+                    <span style="color: var(--gray-500);">|</span>
+                    <a href="https://masterjunction.com.np" target="_blank" style="color: var(--gray-400); display: flex; align-items: center; gap: 6px;">
+                        Powered by <span class="gradient-text" style="font-weight: 600;">Master Junction</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    {% if profile.whatsapp %}
+    <div class="whatsapp-float">
+        <a href="https://wa.me/{{ profile.whatsapp }}" class="whatsapp-btn" target="_blank" aria-label="Chat on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+    {% endif %}
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

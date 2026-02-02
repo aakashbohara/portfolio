@@ -1,0 +1,136 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ project.title }} - {{ profile.full_name }}{% endblock %}
+
+{% block meta_description %}{{ project.short_description|truncatechars:160 }}{% endblock %}
+
+{% block extra_head %}
+<!-- SEO & Social Meta Tags -->
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="{{ project.meta_title|default:project.title }}">
+<meta property="og:description" content="{{ project.meta_description|default:project.short_description }}">
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.thumbnail.url }}">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+<meta property="twitter:title" content="{{ project.meta_title|default:project.title }}">
+<meta property="twitter:description" content="{{ project.meta_description|default:project.short_description }}">
+<meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ project.thumbnail.url }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">{{ project.title }}</h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span>
+            <a href="{% url 'projects' %}">Projects</a><span>/</span>
+            <span>{{ project.title|truncatewords:3 }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="project-details-grid">
+            <div class="project-main-content">
+                {% if project.featured_image %}
+                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" style="width: 100%; border-radius: 16px; margin-bottom: 2rem;" loading="lazy">
+                {% else %}
+                <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="width: 100%; border-radius: 16px; margin-bottom: 2rem;" loading="lazy">
+                {% endif %}
+
+                <div class="content" style="color: var(--gray-300);">
+                    {{ project.description|safe }}
+                </div>
+
+                {% if project.images.exists %}
+                <div style="margin-top: 3rem;">
+                    <h4 style="margin-bottom: 1.5rem;">Project Gallery</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        {% for image in project.images.all %}
+                        <img src="{{ image.image.url }}" alt="{{ image.caption }}" style="width: 100%; border-radius: 12px;">
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <div class="glass" style="padding: 30px; margin-bottom: 2rem;">
+                    <h4 style="margin-bottom: 1.5rem;">Project Details</h4>
+                    
+                    {% if project.client %}
+                    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border);">
+                        <span style="color: var(--gray-400);">Client</span>
+                        <p style="color: var(--white); margin: 0.25rem 0 0;">{{ project.client }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if project.category %}
+                    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border);">
+                        <span style="color: var(--gray-400);">Category</span>
+                        <p style="color: var(--white); margin: 0.25rem 0 0;">{{ project.category.name }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if project.project_date %}
+                    <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border);">
+                        <span style="color: var(--gray-400);">Date</span>
+                        <p style="color: var(--white); margin: 0.25rem 0 0;">{{ project.project_date|date:"F Y" }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if project.technologies %}
+                    <div>
+                        <span style="color: var(--gray-400);">Technologies</span>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                            {% for tech in project.get_technologies_list %}
+                            <span style="padding: 4px 12px; background: var(--gray-800); border-radius: 20px; font-size: 0.85rem; color: var(--gray-300);">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    {% if project.project_url %}
+                    <a href="{{ project.project_url }}" class="btn btn-primary" target="_blank" style="width: 100%;">
+                        <i class="fas fa-external-link-alt"></i> View Live Project
+                    </a>
+                    {% endif %}
+                    {% if project.github_url %}
+                    <a href="{{ project.github_url }}" class="btn btn-outline" target="_blank" style="width: 100%;">
+                        <i class="fab fa-github"></i> View Source Code
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if related_projects %}
+        <div style="margin-top: 5rem;">
+            <h3 style="margin-bottom: 2rem;">Related Projects</h3>
+            <div class="projects-grid">
+                {% for related in related_projects %}
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="{{ related.thumbnail.url }}" alt="{{ related.title }}">
+                    </div>
+                    <div class="project-content">
+                        <h4 class="project-title"><a href="{{ related.get_absolute_url }}">{{ related.title }}</a></h4>
+                        <p class="project-description">{{ related.short_description|truncatewords:15 }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

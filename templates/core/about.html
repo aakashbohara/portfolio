@@ -1,0 +1,152 @@
+{% extends 'core/base.html' %}
+
+{% block title %}About Me - {{ profile.full_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">About <span class="gradient-text">Me</span></h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span><span>About</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="about-grid">
+            <div>
+                {% if profile.profile_image %}
+                <div style="position: relative; margin-bottom: 2rem;">
+                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}" style="width: 100%; border-radius: 24px;">
+                    <div style="position: absolute; bottom: -15px; right: -15px; width: 120px; height: 120px; background: linear-gradient(135deg, var(--primary-start), var(--primary-end)); border-radius: 20px; z-index: -1;"></div>
+                </div>
+                {% endif %}
+
+                <div class="glass" style="padding: 30px; margin-bottom: 2rem;">
+                    <h4 style="margin-bottom: 1.5rem;">Quick Info</h4>
+                    <div style="margin-bottom: 1rem;">
+                        <span style="color: var(--gray-400);">Name:</span>
+                        <span style="color: var(--white); float: right;">{{ profile.full_name }}</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span style="color: var(--gray-400);">Email:</span>
+                        <span style="color: var(--white); float: right;">{{ profile.email }}</span>
+                    </div>
+                    {% if profile.location %}
+                    <div style="margin-bottom: 1rem;">
+                        <span style="color: var(--gray-400);">Location:</span>
+                        <span style="color: var(--white); float: right;">{{ profile.location }}</span>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <span style="color: var(--gray-400);">Experience:</span>
+                        <span style="color: var(--white); float: right;">{{ profile.years_experience }}+ Years</span>
+                    </div>
+                </div>
+
+                {% if profile.resume %}
+                <a href="{{ profile.resume.url }}" class="btn btn-primary" style="width: 100%;" target="_blank">
+                    <i class="fas fa-download"></i> Download Resume
+                </a>
+                {% endif %}
+            </div>
+
+            <div>
+                <div class="section-badge"><i class="fas fa-user"></i> Who I Am</div>
+                <h2 style="margin-bottom: 1.5rem;">{{ profile.title }}</h2>
+                
+                <div class="content" style="color: var(--gray-300);">
+                    {{ profile.bio_full|safe|default:profile.bio_short }}
+                </div>
+
+                <!-- Skills -->
+                {% if skill_categories %}
+                <div style="margin-top: 3rem;">
+                    <h3 style="margin-bottom: 1.5rem;">My Skills</h3>
+                    {% for category in skill_categories %}
+                    <div style="margin-bottom: 2rem;">
+                        <h5 style="color: var(--accent); margin-bottom: 1rem;">{{ category.name }}</h5>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                            {% for skill in category.skills.all %}
+                            {% if skill.is_active %}
+                            <div class="glass" style="padding: 10px 20px; border-radius: 50px;">
+                                <span style="color: var(--white);">{{ skill.name }}</span>
+                                <span style="color: var(--primary); margin-left: 8px;">{{ skill.proficiency }}%</span>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience & Education -->
+<section class="section">
+    <div class="container">
+        <div class="two-col-grid">
+            <!-- Experience -->
+            {% if experiences %}
+            <div>
+                <h3 style="margin-bottom: 2rem;"><i class="fas fa-briefcase" style="color: var(--accent); margin-right: 10px;"></i> Experience</h3>
+                {% for exp in experiences %}
+                <div class="glass" style="padding: 25px; margin-bottom: 1.5rem; border-left: 3px solid var(--primary);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <h5 style="margin: 0;">{{ exp.job_title }}</h5>
+                        <span style="color: var(--accent); font-size: 0.85rem;">{{ exp.start_date|date:"Y" }} - {% if exp.is_current %}Present{% else %}{{ exp.end_date|date:"Y" }}{% endif %}</span>
+                    </div>
+                    <p style="color: var(--primary); margin-bottom: 0.75rem;">{{ exp.company }}</p>
+                    <div style="color: var(--gray-400); font-size: 0.95rem;">{{ exp.description|striptags|truncatewords:30 }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Education -->
+            {% if educations %}
+            <div>
+                <h3 style="margin-bottom: 2rem;"><i class="fas fa-graduation-cap" style="color: var(--accent); margin-right: 10px;"></i> Education</h3>
+                {% for edu in educations %}
+                <div class="glass" style="padding: 25px; margin-bottom: 1.5rem; border-left: 3px solid var(--accent);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <h5 style="margin: 0;">{{ edu.degree }}</h5>
+                        <span style="color: var(--accent); font-size: 0.85rem;">{{ edu.start_date|date:"Y" }} - {% if edu.is_current %}Present{% else %}{{ edu.end_date|date:"Y" }}{% endif %}</span>
+                    </div>
+                    <p style="color: var(--primary); margin-bottom: 0.5rem;">{{ edu.institution }}</p>
+                    {% if edu.field_of_study %}<p style="color: var(--gray-400); margin: 0;">{{ edu.field_of_study }}</p>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Certifications -->
+{% if certifications %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h3><i class="fas fa-certificate" style="color: var(--accent);"></i> Certifications</h3>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+            {% for cert in certifications %}
+            <div class="glass" style="padding: 25px;">
+                <h5 style="margin-bottom: 0.5rem;">{{ cert.name }}</h5>
+                <p style="color: var(--accent); margin-bottom: 0.5rem;">{{ cert.issuing_organization }}</p>
+                <p style="color: var(--gray-500); font-size: 0.85rem; margin: 0;">Issued: {{ cert.issue_date|date:"M Y" }}</p>
+                {% if cert.credential_url %}
+                <a href="{{ cert.credential_url }}" target="_blank" style="font-size: 0.9rem; margin-top: 0.75rem; display: inline-block;">View Credential <i class="fas fa-external-link-alt"></i></a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Contact - {{ profile.full_name }}{% endblock %}
+
+{% block extra_head %}
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contact {{ profile.full_name }}">
+<meta property="og:description" content="Get in touch for projects, collaborations, or inquiries.">
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">Get in <span class="gradient-text">Touch</span></h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span><span>Contact</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="contact-grid">
+            <!-- Contact Info -->
+            <div class="contact-info glass">
+                <h3 class="contact-info-title">Let's Talk</h3>
+                <p style="color: var(--gray-400); margin-bottom: 2rem;">
+                    Have a project in mind or just want to say hello? Feel free to reach out!
+                </p>
+
+                <div class="contact-info-item">
+                    <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="contact-info-content">
+                        <h5>Email</h5>
+                        <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+                    </div>
+                </div>
+
+                {% if profile.phone %}
+                <div class="contact-info-item">
+                    <div class="contact-info-icon"><i class="fas fa-phone"></i></div>
+                    <div class="contact-info-content">
+                        <h5>Phone</h5>
+                        <a href="tel:{{ profile.phone }}">{{ profile.phone }}</a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if profile.whatsapp %}
+                <div class="contact-info-item">
+                    <div class="contact-info-icon"><i class="fab fa-whatsapp"></i></div>
+                    <div class="contact-info-content">
+                        <h5>WhatsApp</h5>
+                        <a href="https://wa.me/{{ profile.whatsapp }}" target="_blank">Chat on WhatsApp</a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if profile.location %}
+                <div class="contact-info-item">
+                    <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="contact-info-content">
+                        <h5>Location</h5>
+                        <p>{{ profile.location }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="contact-social">
+                    <h5>Follow Me</h5>
+                    <div class="contact-social-links">
+                        {% if profile.github %}<a href="{{ profile.github }}" target="_blank"><i class="fab fa-github"></i></a>{% endif %}
+                        {% if profile.linkedin %}<a href="{{ profile.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                        {% if profile.twitter %}<a href="{{ profile.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                        {% if profile.instagram %}<a href="{{ profile.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                        {% if profile.dribbble %}<a href="{{ profile.dribbble }}" target="_blank"><i class="fab fa-dribbble"></i></a>{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form glass">
+                <h3>Send a Message</h3>
+                
+                <form method="post" action="{% url 'contact' %}">
+                    {% csrf_token %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Your Name *</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Your Email *</label>
+                            {{ form.email }}
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Project Type</label>
+                            {{ form.project_type }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Budget</label>
+                            {{ form.budget }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Subject *</label>
+                        {{ form.subject }}
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Message *</label>
+                        {{ form.message }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

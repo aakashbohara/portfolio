@@ -1,0 +1,8 @@
+Django
+django-unfold
+django-ckeditor
+Pillow
+python-dotenv
+gunicorn
+whitenoise
+django-fontawesome-6

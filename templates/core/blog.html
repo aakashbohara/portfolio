@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Blog - {{ profile.full_name }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">My <span class="gradient-text">Blog</span></h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span><span>Blog</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if categories %}
+        <div class="projects-filter" style="margin-bottom: 3rem;">
+            <a href="{% url 'blog' %}" class="filter-btn {% if not request.GET.category %}active{% endif %}">All</a>
+            {% for category in categories %}
+            <a href="{% url 'blog' %}?category={{ category.slug }}" class="filter-btn {% if request.GET.category == category.slug %}active{% endif %}">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="blog-grid">
+            {% for post in posts %}
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" loading="lazy">
+                    {% if post.category %}
+                    <span class="blog-category">{{ post.category.name }}</span>
+                    {% endif %}
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar"></i> {{ post.published_date|date:"M d, Y" }}</span>
+                        <span><i class="far fa-clock"></i> {{ post.reading_time }} min</span>
+                    </div>
+                    <h4 class="blog-title">
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </h4>
+                    <p class="blog-excerpt">{{ post.excerpt }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p style="text-align: center; grid-column: 1 / -1;">No posts found.</p>
+            {% endfor %}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 3rem;">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-ghost">&laquo; Previous</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-ghost">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ service.title }} - {{ profile.full_name }}{% endblock %}
+
+{% block meta_description %}{{ service.short_description|truncatechars:160 }}{% endblock %}
+
+{% block extra_head %}
+<!-- SEO & Social Meta Tags -->
+<link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:title" content="{{ service.title }} | Service">
+<meta property="og:description" content="{{ service.short_description }}">
+{% if service.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}">{% endif %}
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary">
+<meta property="twitter:title" content="{{ service.title }}">
+<meta property="twitter:description" content="{{ service.short_description }}">
+{% if service.image %}<meta property="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ service.image.url }}">{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1 class="page-title">{{ service.title }}</h1>
+        <div class="page-breadcrumb">
+            <a href="{% url 'home' %}">Home</a><span>/</span>
+            <a href="{% url 'services' %}">Services</a><span>/</span>
+            <span>{{ service.title }}</span>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container" style="max-width: 900px;">
+        <div class="glass" style="padding: 50px; text-align: center; margin-bottom: 3rem;">
+            <div class="service-icon" style="margin: 0 auto 1.5rem;">
+                {% if service.icon %}{{ service.icon.as_html }}{% else %}<i class="fas fa-laptop-code"></i>{% endif %}
+            </div>
+            <h2 style="margin-bottom: 1rem;">{{ service.title }}</h2>
+            {% if service.image %}
+            <div style="margin-bottom: 2rem; border-radius: 12px; overflow: hidden;">
+                <img src="{{ service.image.url }}" alt="{{ service.title }}" style="width: 100%; max-height: 400px; object-fit: cover;" loading="lazy">
+            </div>
+            {% endif %}
+            {% if service.price_starting %}
+            <div style="font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 1rem;">From {{ service.price_starting }}</div>
+            {% endif %}
+            <p style="color: var(--gray-400); max-width: 600px; margin: 0 auto;">{{ service.short_description }}</p>
+        </div>
+
+        <div class="content" style="color: var(--gray-300);">
+            {{ service.description|safe|default:service.short_description }}
+        </div>
+
+        <div class="glass" style="padding: 40px; margin-top: 3rem; text-align: center;">
+            <h3 style="margin-bottom: 1rem;">Interested in this service?</h3>
+            <p style="color: var(--gray-400); margin-bottom: 2rem;">Let's discuss your project requirements.</p>
+            <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-paper-plane"></i> Get in Touch
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
