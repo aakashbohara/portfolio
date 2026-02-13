@@ -20,7 +20,7 @@
 
         <div class="services-grid">
             {% for service in services %}
-            <div class="service-card">
+            <div class="service-card" data-tilt>
                 <div class="service-icon">
                     {% if service.icon %}{{ service.icon.as_html }}{% else %}<i class="fas fa-laptop-code"></i>{% endif %}
                 </div>
@@ -31,12 +31,12 @@
                 {% endif %}
             </div>
             {% empty %}
-            <p style="text-align: center; grid-column: 1 / -1;">No services available.</p>
+            <p style="text-align: center; grid-column: 1 / -1; color: var(--gray-400);">No services available.</p>
             {% endfor %}
         </div>
 
         <!-- CTA -->
-        <div class="glass" style="padding: 50px; text-align: center; margin-top: 4rem; border-radius: 20px;">
+        <div class="glass" style="padding: 50px; text-align: center; margin-top: 4rem; border-radius: 20px;" data-tilt>
             <h3 style="margin-bottom: 1rem;">Ready to Start Your Project?</h3>
             <p style="color: var(--gray-400); max-width: 500px; margin: 0 auto 2rem;">Let's discuss how I can help bring your ideas to life.</p>
             <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">

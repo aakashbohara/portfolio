@@ -6,6 +6,53 @@ PROFESSIONAL PORTFOLIO - JAVASCRIPT
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    // ============== CUSTOM CURSOR ==============
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+
+    const cursorDot = document.createElement('div');
+    cursorDot.className = 'custom-cursor-dot';
+    document.body.appendChild(cursorDot);
+
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        cursorDot.style.left = e.clientX + 'px';
+        cursorDot.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => cursor.classList.add('active'));
+    document.addEventListener('mouseup', () => cursor.classList.remove('active'));
+
+    document.querySelectorAll('a, button, .project-card, .bento-card').forEach(link => {
+        link.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+        link.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+    });
+
+    // ============== TILT EFFECT ==============
+    const tiltElements = document.querySelectorAll('.bento-card, .project-card, .service-card');
+    
+    tiltElements.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * -5; // Max rotation deg
+            const rotateY = ((x - centerX) / centerX) * 5;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+        });
+    });
+
     // ============== NAVBAR SCROLL ==============
     const navbar = document.querySelector('.navbar');
     

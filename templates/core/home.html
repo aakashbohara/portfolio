@@ -7,49 +7,54 @@
         <div class="bento-grid">
             
             <!-- Hero Card -->
-            <div class="bento-card hero-card col-span-2 row-span-2">
-                {% if profile.is_available_for_hire %}
-                <div class="hero-badge" style="margin-bottom: 1.5rem; width: fit-content;">
-                    <i class="fas fa-circle" style="font-size: 8px; color: #10b981;"></i>
-                    {{ profile.availability_status|default:"Available for Work" }}
-                </div>
-                {% endif %}
-                
-                <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; margin-bottom: 1.5rem;">
-                    I'm <span class="gradient-text">{{ profile.first_name }}</span><br>
-                    <span class="typing-text" style="font-size: 0.6em; color: var(--gray-400);" data-texts='["{{ profile.title }}", "Creative Developer", "Problem Solver"]'>{{ profile.title }}</span>
-                </h1>
-                
-                <p style="color: var(--gray-300); font-size: 1.1rem; max-width: 500px; margin-bottom: 2rem;">
-                    {{ profile.bio_short }}
-                </p>
+            <div class="bento-card hero-card col-span-2 row-span-2" data-tilt>
+                <div style="position: relative; z-index: 2;">
+                    {% if profile.is_available_for_hire %}
+                    <div class="hero-badge" style="margin-bottom: 1.5rem; width: fit-content;">
+                        <i class="fas fa-circle" style="font-size: 8px; color: #10b981; box-shadow: 0 0 10px #10b981;"></i>
+                        {{ profile.availability_status|default:"Available for Work" }}
+                    </div>
+                    {% endif %}
+                    
+                    <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.02em;">
+                        I'm <span class="gradient-text">{{ profile.first_name }}</span><br>
+                        <span class="typing-text" style="font-size: 0.5em; color: var(--gray-400); font-weight: 500;" data-texts='["{{ profile.title }}", "Creative Developer", "Problem Solver"]'>{{ profile.title }}</span>
+                    </h1>
+                    
+                    <p style="color: var(--gray-300); font-size: 1.15rem; max-width: 520px; margin-bottom: 2.5rem; line-height: 1.6;">
+                        {{ profile.bio_short }}
+                    </p>
 
-                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <a href="{% url 'projects' %}" class="btn btn-primary"><i class="fas fa-folder-open"></i> Work</a>
-                    <a href="{% url 'contact' %}" class="btn btn-outline"><i class="fas fa-paper-plane"></i> Hire Me</a>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <a href="{% url 'projects' %}" class="btn btn-primary"><i class="fas fa-folder-open"></i> View Work</a>
+                        <a href="{% url 'contact' %}" class="btn btn-outline"><i class="fas fa-paper-plane"></i> Let's Talk</a>
+                    </div>
                 </div>
+                
+                <!-- Decor -->
+                <div style="position: absolute; top: -20%; right: -10%; width: 300px; height: 300px; background: var(--primary); filter: blur(100px); opacity: 0.2; border-radius: 50%; z-index: 1;"></div>
             </div>
 
             <!-- Profile Image Card -->
-            <div class="bento-card row-span-2" style="padding: 0;">
-                <div style="width: 100%; height: 100%; position: relative;">
+            <div class="bento-card row-span-2" style="padding: 0;" data-tilt>
+                <div style="width: 100%; height: 100%; position: relative; overflow: hidden; border-radius: 24px;">
                     {% if profile.profile_image %}
-                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.full_name }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease;" loading="lazy" class="hover-zoom">
                     {% else %}
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800" alt="{{ profile.full_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800" alt="{{ profile.full_name }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease;" loading="lazy" class="hover-zoom">
                     {% endif %}
-                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, var(--dark) 0%, transparent 50%);"></div>
+                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, var(--dark) 0%, transparent 60%);"></div>
                 </div>
             </div>
 
             <!-- Stats Card -->
-            <div class="bento-card">
-                <div class="hero-stat-value" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 0.5rem;" data-target="{{ profile.years_experience }}" data-suffix="+">{{ profile.years_experience }}+</div>
-                <div style="color: var(--gray-400); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Exp. Years</div>
+            <div class="bento-card" data-tilt>
+                <div class="hero-stat-value" style="font-size: 3rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; letter-spacing: -2px;" data-target="{{ profile.years_experience }}" data-suffix="+">{{ profile.years_experience }}+</div>
+                <div style="color: var(--gray-400); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Years Exp.</div>
             </div>
 
             <!-- Tech Stack Card -->
-            <div class="bento-card">
+            <div class="bento-card" data-tilt>
                 <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                     {% for skill in skills|slice:":6" %}
                     <div class="skill-tag" title="{{ skill.name }}">
@@ -57,16 +62,20 @@
                     </div>
                     {% endfor %}
                 </div>
-                <h5 style="margin-top: 1rem; color: var(--gray-400);">Tech Stack</h5>
+                <h5 style="margin-top: 1rem; color: var(--gray-400); font-size: 0.9rem;">Favorite Tech</h5>
+                <div style="position: absolute; bottom: -20px; right: -20px; font-size: 5rem; color: rgba(255,255,255,0.03); transform: rotate(-15deg);"><i class="fas fa-code"></i></div>
             </div>
 
             <!-- Featured Links (col-span-2) -->
             {% if featured_links %}
-            <div class="bento-card col-span-2">
-                <h4 style="margin-bottom: 1rem;"><i class="fas fa-link" style="color: var(--primary);"></i> Quick Connect</h4>
-                <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 10px;">
+            <div class="bento-card col-span-2" data-tilt>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4 style="margin: 0;"><i class="fas fa-link gradient-text" style="margin-right: 10px;"></i> Connect</h4>
+                    <span style="font-size: 0.8rem; color: var(--gray-500);">Socials & More</span>
+                </div>
+                <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;">
                     {% for link in featured_links %}
-                    <a href="{{ link.url }}" target="_blank" class="glass" style="padding: 12px 20px; border-radius: 12px; white-space: nowrap; text-decoration: none; color: white; display: flex; align-items: center; gap: 10px;">
+                    <a href="{{ link.url }}" target="_blank" class="glass-light" style="padding: 12px 24px; border-radius: 16px; white-space: nowrap; text-decoration: none; color: white; display: flex; align-items: center; gap: 10px; transition: all 0.3s ease;">
                         {% if link.icon %}{{ link.icon.as_html }}{% endif %} {{ link.title }}
                     </a>
                     {% endfor %}
@@ -77,25 +86,34 @@
             <!-- Featured Project (col-span-2 row-span-2) -->
             {% if projects %}
             {% with project=projects|first %}
-            <a href="{{ project.get_absolute_url }}" class="bento-card col-span-2 row-span-2" style="padding: 0; text-decoration: none;">
-                <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;" loading="lazy">
-                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 60%); display: flex; flex-direction: column; justify-content: flex-end; padding: 32px;">
-                    <span style="color: var(--accent); font-size: 0.8rem; text-transform: uppercase;">Featured Project</span>
-                    <h3 style="color: white; margin-top: 0.5rem;">{{ project.title }}</h3>
+            <a href="{{ project.get_absolute_url }}" class="bento-card col-span-2 row-span-2" style="padding: 0; text-decoration: none; position: relative; group" data-tilt>
+                <img src="{{ project.thumbnail.url }}" alt="{{ project.title }}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; transition: transform 0.7s ease;" loading="lazy" class="hover-zoom">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(2, 6, 23, 0.95) 0%, transparent 80%); display: flex; flex-direction: column; justify-content: flex-end; padding: 40px; transition: opacity 0.3s ease;">
+                    <span style="color: var(--accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; font-weight: 700;">Featured Project</span>
+                    <h3 style="color: white; margin: 0; font-size: 2rem;">{{ project.title }}</h3>
+                    <div style="margin-top: 1rem; opacity: 0; transform: translateY(20px); transition: all 0.4s ease; display: flex; align-items: center; gap: 0.5rem;" class="reveal-content">
+                        <span>View Details</span> <i class="fas fa-arrow-right"></i>
+                    </div>
                 </div>
             </a>
+            <style>
+                .bento-card:hover .reveal-content { opacity: 1; transform: translateY(0); }
+                .hover-zoom { transition: transform 0.7s cubic-bezier(0.2, 0, 0, 1) !important; }
+                .bento-card:hover .hover-zoom { transform: scale(1.1); }
+            </style>
             {% endwith %}
             {% endif %}
 
             <!-- Latest Blog -->
             {% if blog_posts %}
             {% with post=blog_posts|first %}
-            <a href="{{ post.get_absolute_url }}" class="bento-card col-span-2" style="text-decoration: none;">
-                <div style="display: flex; gap: 20px; align-items: center;">
-                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" style="width: 80px; height: 80px; border-radius: 16px; object-fit: cover;" loading="lazy">
+            <a href="{{ post.get_absolute_url }}" class="bento-card col-span-2" style="text-decoration: none;" data-tilt>
+                <div style="display: flex; gap: 24px; align-items: center;">
+                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" style="width: 100px; height: 100px; border-radius: 20px; object-fit: cover;" loading="lazy">
                     <div>
-                        <span style="font-size: 0.8rem; color: var(--primary);">New Post</span>
-                        <h5 style="color: white; margin: 5px 0;">{{ post.title }}</h5>
+                        <span style="font-size: 0.75rem; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Latest Thoughts</span>
+                        <h4 style="color: white; margin: 8px 0; font-size: 1.25rem;">{{ post.title }}</h4>
+                        <span style="font-size: 0.9rem; color: var(--gray-400);">Read Article <i class="fas fa-arrow-right" style="margin-left: 5px; font-size: 0.8em;"></i></span>
                     </div>
                 </div>
             </a>
@@ -103,16 +121,17 @@
             {% endif %}
 
             <!-- Services Card -->
-            <div class="bento-card">
-                <div class="card-icon"><i class="fas fa-rocket"></i></div>
+            <div class="bento-card" data-tilt>
+                <div class="card-icon" style="margin-bottom: 1rem;"><i class="fas fa-rocket"></i></div>
                 <h4 style="margin-bottom: 0.5rem;">Services</h4>
-                <a href="{% url 'services' %}" style="color: var(--accent); font-size: 0.9rem;">View All <i class="fas fa-arrow-right"></i></a>
+                <div style="font-size: 0.9rem; color: var(--gray-400); margin-bottom: 1rem;">Expert solutions for your ideas.</div>
+                <a href="{% url 'services' %}" style="color: var(--accent); font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 5px;">View Services <i class="fas fa-arrow-right"></i></a>
             </div>
 
             <!-- Achievements Card -->
-            <div class="bento-card">
-                <div class="hero-stat-value" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem;" data-target="{{ profile.projects_completed }}" data-suffix="+">{{ profile.projects_completed }}+</div>
-                <div style="color: var(--gray-400); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Projects</div>
+            <div class="bento-card" data-tilt>
+                <div class="hero-stat-value" style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem; letter-spacing: -2px;" data-target="{{ profile.projects_completed }}" data-suffix="+">{{ profile.projects_completed }}+</div>
+                <div style="color: var(--gray-400); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">Completed Projects</div>
             </div>
 
         </div>
